@@ -1,5 +1,5 @@
 <template>
-  <UContainer>
-    <Form />
-  </UContainer>
+    <UContainer>
+        <Form />
+    </UContainer>
 </template>
