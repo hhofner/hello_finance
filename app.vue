@@ -6,6 +6,7 @@ const spentThisMonth = ref(0);
 
 onMounted(async () => {
   // TODO: Fetch expenses only for the current month
+  if (!user.value) return
   const { data, error } = await client.from("expenses").select("price").eq("user_id", user.value.id)
 
   if (error) {
