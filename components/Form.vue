@@ -6,10 +6,6 @@ import { format } from "date-fns";
 const toast = useToast();
 const isLoading = ref(false);
 
-function wait(ms) {
-    return new Promise((resolve) => setTimeout(resolve, ms));
-}
-
 const schema = v.object({
     price: v.pipe(v.number(), v.integer()),
     category: v.pipe(v.string()),
@@ -19,7 +15,7 @@ const schema = v.object({
 
 type Schema = v.InferOutput<typeof schema>;
 
-const state = reactive({
+const state = ref({
     price: null,
     category: null,
     notes: "",
@@ -66,7 +62,6 @@ async function onSubmit(event: FormSubmitEvent<Schema>) {
     console.log("Submitting form");
     console.log(event.data);
     isLoading.value = true;
-    await wait(8000);
     const { error } = await client.from("expenses").insert({
         price: event.data.price,
         category: event.data.category,

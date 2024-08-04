@@ -26,11 +26,12 @@ const entries = ref([]);
 onMounted(async () => {
     const { data, error } = await client
         .from("expenses")
-        .select("*")
+        .select("*", { count: "exact" })
         .eq("user_id", user.value.id)
+        .order("id", { ascending: false })
         .range(0, 10);
 
-    console.log("data", data);
+    console.log("entries data", data);
     if (error) {
         console.error(error);
         toast.add({
