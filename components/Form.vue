@@ -6,6 +6,10 @@ import { format } from "date-fns";
 const toast = useToast();
 const isLoading = ref(false);
 
+function wait(ms) {
+    return new Promise((resolve) => setTimeout(resolve, ms));
+}
+
 const schema = v.object({
     price: v.pipe(v.number(), v.integer()),
     category: v.pipe(v.string()),
@@ -62,6 +66,7 @@ async function onSubmit(event: FormSubmitEvent<Schema>) {
     console.log("Submitting form");
     console.log(event.data);
     isLoading.value = true;
+    await wait(8000);
     const { error } = await client.from("expenses").insert({
         price: event.data.price,
         category: event.data.category,
@@ -74,6 +79,13 @@ async function onSubmit(event: FormSubmitEvent<Schema>) {
         toast.add({ title: `Error adding expense: ${error}`, color: "red" });
     } else {
         toast.add({ title: "Expense added", color: "green" });
+
+        state.value = {
+            price: null,
+            category: null,
+            notes: "",
+            account: null,
+        };
     }
     isLoading.value = false;
 }
@@ -170,6 +182,26 @@ watch(date, () => {
     </UPopover> -->
         <UTextarea v-model="state.notes" size="xl" placeholder="Notes..." />
 
-        <UButton type="submit" :disabled="isLoading"> Submit </UButton>
+        <div class="flex items-center gap-2">
+            <UButton type="submit" :disabled="isLoading"> Submit </UButton>
+            <Transition
+                ><UIcon
+                    v-if="isLoading"
+                    name="i-line-md-uploading-loop"
+                    class="w-5 h-5"
+            /></Transition>
+        </div>
     </UForm>
 </template>
+
+<style>
+.v-enter-active,
+.v-leave-active {
+    transition: opacity 0.5s ease;
+}
+
+.v-enter-from,
+.v-leave-to {
+    opacity: 0;
+}
+</style>
