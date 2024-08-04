@@ -23,6 +23,30 @@ onMounted(async () => {
         spentThisMonth.value = 0;
     }
 });
+const route = useRoute();
+
+const links = [
+    {
+        label: "Quick Input",
+        icon: "i-material-symbols-input",
+        to: "/",
+    },
+    {
+        label: "Entries",
+        icon: "i-material-symbols-format-list-bulleted-rounded",
+        to: "/entries",
+    },
+    {
+        label: "Stats",
+        icon: "i-material-symbols-query-stats",
+        to: "/stats",
+    },
+    {
+        label: "Accounts",
+        icon: "i-material-symbols-account-balance-wallet",
+        to: "/accounts",
+    },
+];
 </script>
 
 <template>
@@ -48,6 +72,10 @@ onMounted(async () => {
                     </p>
                 </div>
             </template>
+            <UHorizontalNavigation
+                :links="links"
+                class="border-b border-gray-200 dark:border-gray-800 mb-4"
+            />
             <NuxtPage />
         </UCard>
     </UContainer>

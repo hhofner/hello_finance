@@ -1,5 +1,3 @@
 <template>
-    <UContainer>
-        <Form />
-    </UContainer>
+    <Form class="mt-4"/>
 </template>

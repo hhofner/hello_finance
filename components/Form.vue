@@ -49,7 +49,6 @@ onMounted(async () => {
         .select("*")
         .eq("user_id", user.value.id);
 
-    console.log("Accounts", accountsData);
     if (accountsError) {
         console.log("Error fetching accounts", accountsError);
     } else if (accountsData) {
@@ -125,7 +124,7 @@ watch(date, () => {
                 </div>
             </template>
 
-            <UInput v-model="state.price" type="number" />
+            <UInput v-model="state.price" :autofocus="true" type="number" />
         </UFormGroup>
 
         <UFormGroup name="category" size="xl">
