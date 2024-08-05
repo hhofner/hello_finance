@@ -1,3 +1,3 @@
 <template>
-    <Form class="mt-4"/>
+  <Form class="mt-4" />
 </template>

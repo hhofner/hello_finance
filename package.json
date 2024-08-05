@@ -1,7 +1,7 @@
 {
   "name": "nuxt-app",
-  "private": true,
   "type": "module",
+  "private": true,
   "scripts": {
     "build": "nuxt build",
     "dev": "nuxt dev",
@@ -11,6 +11,11 @@
     "lint": "eslint .",
     "lint:fix": "eslint . --fix"
   },
+  "dependencies": {
+    "date-fns": "^2.30.0",
+    "v-calendar": "^3.1.2",
+    "valibot": "^0.37.0"
+  },
   "devDependencies": {
     "@antfu/eslint-config": "^2.24.1",
     "@nuxt/devtools": "latest",
@@ -18,10 +23,5 @@
     "@nuxtjs/supabase": "^1.3.5",
     "eslint": "^9.8.0",
     "nuxt": "^3.12.4"
-  },
-  "dependencies": {
-    "date-fns": "^2.30.0",
-    "v-calendar": "^3.1.2",
-    "valibot": "^0.37.0"
   }
 }
