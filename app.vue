@@ -46,6 +46,11 @@ const links = [
         icon: "i-material-symbols-account-balance-wallet",
         to: "/accounts",
     },
+    {
+        label: "Subscriptions",
+        icon: "i-material-symbols-settings",
+        to: "/subscriptions",
+    },
 ];
 </script>
 
