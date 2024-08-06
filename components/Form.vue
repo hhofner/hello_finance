@@ -183,28 +183,9 @@ watch(date, () => {
     <UTextarea v-model="state.notes" size="xl" placeholder="Notes..." />
 
     <div class="flex items-center gap-2">
-      <UButton type="submit" :disabled="isLoading">
+      <UButton type="submit" :loading="isLoading">
         Submit
       </UButton>
-      <Transition>
-        <UIcon
-          v-if="isLoading"
-          name="i-line-md-uploading-loop"
-          class="w-5 h-5"
-        />
-      </Transition>
     </div>
   </UForm>
 </template>
-
-<style>
-.v-enter-active,
-.v-leave-active {
-    transition: opacity 0.5s ease;
-}
-
-.v-enter-from,
-.v-leave-to {
-    opacity: 0;
-}
-</style>
