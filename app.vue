@@ -26,7 +26,6 @@ onMounted(async () => {
     spentThisMonth.value = 0
   }
 })
-const route = useRoute()
 
 const links = [
   {
@@ -74,7 +73,7 @@ const links = [
         </div>
         <div>
           <p class="text-gray-500 flex items-center gap-1">
-            This Month: <span>¥{{ spentThisMonth }}</span>
+            This Month: <span>¥{{ formatNumber(spentThisMonth) }}</span>
             <UIcon
               name="i-material-symbols-trending-up"
               class="w-5 h-5"

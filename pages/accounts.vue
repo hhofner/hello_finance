@@ -5,7 +5,46 @@ import type { FormSubmitEvent } from '#ui/types'
 const user = useSupabaseUser()
 const client = useSupabaseClient()
 const toast = useToast()
+const spend = ref({})
 const accounts = ref([])
+
+async function fetchSpend() {
+  const currentDate = new Date()
+  const firstDayOfMonth = new Date(currentDate.getFullYear(), currentDate.getMonth(), 1)
+  // Get the first day of the next month (to get all values for the current month)
+  const firstDayOfNextMonth = new Date(currentDate.getFullYear(), currentDate.getMonth() + 1, 1)
+  const { data, error } = await client
+    .from('expenses')
+    .select('*')
+    .gte('created_at', firstDayOfMonth.toISOString())
+    .lt('created_at', firstDayOfNextMonth.toISOString())
+    .neq('account', null)
+    .eq('user_id', user.value.id)
+
+  if (error) {
+    toast.add({
+      title: `Error fetching spend: ${JSON.stringify(error)}`,
+      color: 'red',
+    })
+  }
+  else {
+    data.forEach((expense) => {
+      if (!spend.value[expense.account]) {
+        spend.value[expense.account] = expense.price
+      }
+      else {
+        spend.value[expense.account] += expense.price
+      }
+    })
+    console.log(data)
+  }
+
+  // const { data, error } = await client
+  //   .from('expenses')
+  //   .select('*')
+  //   .eq('user_id', user.value.id)
+  //   .gte('created_at', Date())
+}
 
 async function fetchAccounts() {
   const { data, error } = await client
@@ -24,6 +63,7 @@ async function fetchAccounts() {
   }
 }
 onMounted(() => {
+  fetchSpend()
   fetchAccounts()
 })
 
@@ -55,22 +95,23 @@ async function onSubmit(event: FormSubmitEvent<Schema>) {
     toast.add({ title: 'Added new account', color: 'green' })
     accounts.value.push(data[0])
     state.value = { name: null }
-    isLoading.value = false
   }
+  isLoading.value = false
 }
 </script>
 
 <template>
   <Header>
-    Accounts
+    Accounts This Month
   </Header>
   <div class="grid grid-cols-2 gap-4 my-4">
     <UCard v-for="account in accounts" :key="account.id">
       <template #header>
-        <h2>
+        <h2 class="font-semibold">
           {{ account.name }}
         </h2>
       </template>
+      <p>¥{{ formatNumber(spend[account.name] || 0) }}</p>
     </UCard>
   </div>
   <UDivider label="Create new account" />

@@ -9,7 +9,7 @@ const schema = v.object({
   price: v.pipe(v.number(), v.integer()),
   category: v.pipe(v.string()),
   notes: v.optional(v.string()),
-  account: v.optional(v.string()),
+  account: v.pipe(v.string()),
 })
 
 type Schema = v.InferOutput<typeof schema>
@@ -67,6 +67,7 @@ async function onSubmit(event: FormSubmitEvent<Schema>) {
     price: event.data.price,
     category: event.data.category,
     notes: event.data.notes,
+    account: event.data.account,
     user_id: user.value.id,
   })
 

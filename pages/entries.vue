@@ -47,7 +47,7 @@ async function fetchExpenses(from: number, maxEntries: number) {
     entries.value = data.map((entry) => {
       return {
         ...entry,
-        price: `¥${entry.price}`,
+        price: `¥${formatNumber(entry.price)}`,
         created_at: new Date(entry.created_at).toLocaleDateString(),
       }
     })
