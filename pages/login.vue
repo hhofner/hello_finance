@@ -2,6 +2,7 @@
 const supabase = useSupabaseClient()
 const email = ref('')
 const config = useRuntimeConfig()
+const hasSent = ref(false)
 
 async function signInWithOtp() {
   const { error } = await supabase.auth.signInWithOtp({
@@ -10,16 +11,21 @@ async function signInWithOtp() {
       emailRedirectTo: `${config.public.APP_URL}/confirm`,
     },
   })
-  if (error)
-    console.log(error)
+  if (error) {
+    console.error(error)
+  }
+  else {
+    hasSent.value = true
+  }
 }
 </script>
 
 <template>
   <div class="space-y-2">
     <UInput v-model="email" type="email" placeholder="Email" />
-    <UButton @click="signInWithOtp">
+    <UButton :disabled="hasSent" @click="signInWithOtp">
       Sign In with E-Mail
     </UButton>
+    <span v-if="hasSent" class="inline-flex items-center gap-2 ml-4"><UIcon name="i-material-symbols-check" />Sent! Check your email.</span>
   </div>
 </template>
