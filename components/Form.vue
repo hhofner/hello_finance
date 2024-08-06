@@ -62,8 +62,6 @@ onMounted(async () => {
 })
 
 async function onSubmit(event: FormSubmitEvent<Schema>) {
-  console.log('Submitting form')
-  console.log(event.data)
   isLoading.value = true
   const { error } = await client.from('expenses').insert({
     price: event.data.price,
