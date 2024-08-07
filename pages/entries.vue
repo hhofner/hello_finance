@@ -1,6 +1,8 @@
 <script setup lang="ts">
+import type { Database } from '@/types/index'
+
 const user = useSupabaseUser()
-const client = useSupabaseClient()
+const client = useSupabaseClient<Database>()
 const toast = useToast()
 const route = useRoute()
 const maxEntriesPerPage = 10
@@ -29,7 +31,11 @@ const columns = [
     label: 'Notes',
   },
 ]
-const entries = ref([])
+interface ExpensesEntry extends Omit<Database['public']['Tables']['expenses']['Row'], 'price'> {
+  price: string
+}
+
+const entries = ref<ExpensesEntry[]>([])
 
 async function fetchExpenses(from: number, maxEntries: number) {
   const { data, error, count } = await client
