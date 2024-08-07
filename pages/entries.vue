@@ -5,7 +5,7 @@ const toast = useToast()
 const route = useRoute()
 const maxEntriesPerPage = 10
 const currentPage = ref(1)
-const totalPages = ref(1)
+const entryCount = ref(1)
 
 const columns = [
   {
@@ -47,7 +47,9 @@ async function fetchExpenses(from: number, maxEntries: number) {
     })
   }
   else {
-    totalPages.value = Math.ceil(count / maxEntriesPerPage)
+    if (count) {
+      entryCount.value = count
+    }
     entries.value = data.map((entry) => {
       return {
         ...entry,
@@ -73,5 +75,5 @@ onMounted(async () => {
     Entries
   </Header>
   <UTable :rows="entries" :columns="columns" class="mb-6" />
-  <UPagination v-model="currentPage" :page-count="5" :total="totalPages" />
+  <UPagination v-model="currentPage" :total="entryCount" />
 </template>
