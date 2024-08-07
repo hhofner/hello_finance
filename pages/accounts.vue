@@ -1,9 +1,10 @@
 <script setup lang="ts">
 import * as v from 'valibot'
 import type { FormSubmitEvent } from '#ui/types'
+import type { Database } from '@/types/index'
 
 const user = useSupabaseUser()
-const client = useSupabaseClient()
+const client = useSupabaseClient<Database>()
 const toast = useToast()
 const spend = ref({})
 const accounts = ref([])

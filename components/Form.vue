@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import * as v from 'valibot'
 import type { FormSubmitEvent } from '#ui/types'
+import type { Database } from '@/types/index'
 
 const toast = useToast()
 const isLoading = ref(false)
@@ -26,7 +27,7 @@ const newCategory = ref('')
 const categories = ref<Array<string>>([])
 const accounts = ref<Array<string>>([])
 
-const client = useSupabaseClient()
+const client = useSupabaseClient<Database>()
 const user = useSupabaseUser()
 
 onMounted(async () => {

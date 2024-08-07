@@ -1,5 +1,7 @@
 <script setup lang="ts">
-const supabase = useSupabaseClient()
+import type { Database } from '@/types/index'
+
+const supabase = useSupabaseClient<Database>()
 const email = ref('')
 const config = useRuntimeConfig()
 const hasSent = ref(false)

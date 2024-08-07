@@ -1,6 +1,8 @@
 <script setup lang="ts">
+import type { Database } from '@/types/index'
+
 const user = useSupabaseUser()
-const client = useSupabaseClient()
+const client = useSupabaseClient<Database>()
 
 const spentThisMonth = ref(0)
 const budget = ref(200000)
