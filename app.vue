@@ -3,6 +3,19 @@ const user = useSupabaseUser()
 const client = useSupabaseClient()
 
 const spentThisMonth = ref(0)
+const budget = ref(200000)
+const meterColor = computed(() => {
+  const percentage = (spentThisMonth.value / budget.value) * 100
+  if (percentage <= 75) {
+    return 'primary'
+  }
+  else if (percentage <= 89) {
+    return 'amber'
+  }
+  else {
+    return 'red'
+  }
+})
 
 onMounted(async () => {
   // TODO: Fetch expenses only for the current month
@@ -62,7 +75,7 @@ const links = [
       <template #header>
         <div class="flex justify-between">
           <h1 class="text-3xl text-primary-500">
-            Hello Finance
+            Hello Budget
           </h1>
           <ColorScheme>
             <USelect
@@ -73,13 +86,10 @@ const links = [
         </div>
         <div>
           <p class="text-gray-500 flex items-center gap-1">
-            This Month: <span>¥{{ formatNumber(spentThisMonth) }}</span>
-            <UIcon
-              name="i-material-symbols-trending-up"
-              class="w-5 h-5"
-            />
+            Budget: <span>¥{{ formatNumber(budget) }}</span>
           </p>
         </div>
+        <UMeter size="md" icon="i-solar-money-bag-bold-duotone" indicator :label="`Spent this month: ${formatNumber(spentThisMonth)}`" :value="(spentThisMonth / budget) * 100" :color="meterColor" />
       </template>
       <UHorizontalNavigation
         :links="links"

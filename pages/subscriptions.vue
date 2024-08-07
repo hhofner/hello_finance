@@ -1,4 +1,4 @@
 <template>
-  <div>Subscriptions</div>
+  <Header>Subscriptions</Header>
 </template>
 
