@@ -21,6 +21,10 @@ const columns = [
     label: 'Category',
   },
   {
+    key: 'account',
+    label: 'Account',
+  },
+  {
     key: 'notes',
     label: 'Notes',
   },

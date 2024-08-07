@@ -152,6 +152,7 @@ watch(date, () => {
         v-model="newCategory"
         color="gray"
         variant="outline"
+        size="xl"
         placeholder="New Category"
       />
       <UButton
