@@ -42,31 +42,40 @@ onMounted(async () => {
   }
 })
 
+const isOpen = ref(false)
+function closeSlideover() {
+  isOpen.value = false
+}
 const links = [
   {
     label: 'Quick Input',
     icon: 'i-material-symbols-input',
     to: '/',
+    click: closeSlideover,
   },
   {
     label: 'Entries',
     icon: 'i-material-symbols-format-list-bulleted-rounded',
     to: '/entries',
+    click: closeSlideover,
   },
   {
     label: 'Stats',
     icon: 'i-material-symbols-query-stats',
     to: '/stats',
+    click: closeSlideover,
   },
   {
     label: 'Accounts',
     icon: 'i-material-symbols-account-balance-wallet',
     to: '/accounts',
+    click: closeSlideover,
   },
   {
     label: 'Subscriptions',
     icon: 'i-material-symbols-settings',
     to: '/subscriptions',
+    click: closeSlideover,
   },
 ]
 </script>
@@ -93,12 +102,26 @@ const links = [
         </div>
         <UMeter size="md" icon="i-solar-money-bag-bold-duotone" indicator :label="`Spent this month: ${formatNumber(spentThisMonth)}`" :value="(spentThisMonth / budget) * 100" :color="meterColor" />
       </template>
-      <UHorizontalNavigation
-        :links="links"
-        class="border-b border-gray-200 dark:border-gray-800 mb-4"
-      />
       <NuxtPage />
     </UCard>
   </UContainer>
+  <USlideover v-model="isOpen">
+    <div class="p-4 flex-1">
+      <UButton
+        color="gray"
+        variant="ghost"
+        size="sm"
+        icon="i-heroicons-x-mark-20-solid"
+        class="flex sm:hidden absolute end-5 top-5 z-10"
+        square
+        padded
+        @click="isOpen = false"
+      />
+
+      <!-- <Placeholder class="h-full" /> -->
+      <UVerticalNavigation :links="links" class="mt-10" />
+    </div>
+  </USlideover>
   <UNotifications :timeout="80000" />
+  <UButton square class="absolute bottom-8 right-8" icon="i-fluent-navigation-unread-20-filled" @click="isOpen = true" />
 </template>
