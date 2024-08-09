@@ -37,7 +37,6 @@ async function fetchSpend() {
         spend.value[expense.account] += expense.price
       }
     })
-    console.log(data)
   }
 
   // const { data, error } = await client

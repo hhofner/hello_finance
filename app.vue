@@ -1,6 +1,10 @@
 <script setup lang="ts">
 import type { Database } from '@/types/index'
 
+useHead({
+  titleTemplate: 'Hello Budget',
+})
+
 const user = useSupabaseUser()
 const client = useSupabaseClient<Database>()
 
@@ -123,5 +127,5 @@ const links = [
     </div>
   </USlideover>
   <UNotifications :timeout="80000" />
-  <UButton square class="absolute bottom-8 right-8" icon="i-fluent-navigation-unread-20-filled" @click="isOpen = true" />
+  <UButton size="xl" square class="absolute bottom-8 right-8" icon="i-fluent-navigation-unread-20-filled" @click="isOpen = true" />
 </template>
