@@ -105,6 +105,47 @@ export interface Database {
           },
         ]
       }
+      subscriptions: {
+        Row: {
+          cost: number
+          created_at: string
+          frequency: string
+          id: number
+          name: string
+          paid: boolean
+          start_date: string
+          user_id: string | null
+        }
+        Insert: {
+          cost: number
+          created_at?: string
+          frequency: string
+          id?: number
+          name: string
+          paid: boolean
+          start_date?: string
+          user_id?: string | null
+        }
+        Update: {
+          cost?: number
+          created_at?: string
+          frequency?: string
+          id?: number
+          name?: string
+          paid?: boolean
+          start_date?: string
+          user_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: 'subscriptions_user_id_fkey'
+            columns: ['user_id']
+            isOneToOne: false
+            referencedRelation: 'users'
+            referencedColumns: ['id']
+          },
+        ]
+      }
     }
     Views: {
       [_ in never]: never
