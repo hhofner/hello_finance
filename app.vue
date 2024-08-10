@@ -33,7 +33,7 @@ onMounted(async () => {
     .eq('user_id', user.value.id)
 
   if (error) {
-    console.log('Error fetching expenses', error)
+    console.error('Error fetching expenses', error)
   }
   else if (data) {
     spentThisMonth.value = data.reduce(
@@ -52,7 +52,7 @@ function closeSlideover() {
 }
 const links = [
   {
-    label: 'Quick Input',
+    label: 'Quick Entry',
     icon: 'i-material-symbols-input',
     to: '/',
     click: closeSlideover,
@@ -85,7 +85,7 @@ const links = [
 </script>
 
 <template>
-  <UContainer>
+  <UContainer class="pb-4">
     <UCard class="mt-10">
       <template #header>
         <div class="flex justify-between">
@@ -127,5 +127,5 @@ const links = [
     </div>
   </USlideover>
   <UNotifications :timeout="80000" />
-  <UButton size="xl" square class="absolute bottom-8 right-8" icon="i-fluent-navigation-unread-20-filled" @click="isOpen = true" />
+  <UButton size="xl" square class="fixed bottom-8 right-8" icon="i-fluent-navigation-unread-20-filled" @click="isOpen = true" />
 </template>
