@@ -6,8 +6,8 @@ import type { Database } from '@/types/index'
 const user = useSupabaseUser()
 const client = useSupabaseClient<Database>()
 const toast = useToast()
-const spend = ref({})
-const accounts = ref([])
+const spend = ref<Record<string, number>>({})
+const accounts = ref<Database['public']['Tables']['accounts']['Row'][]>([])
 
 async function fetchSpend() {
   const currentDate = new Date()
@@ -30,20 +30,15 @@ async function fetchSpend() {
   }
   else {
     data.forEach((expense) => {
-      if (!spend.value[expense.account]) {
-        spend.value[expense.account] = expense.price
+      // Expense account exists because of the query
+      if (!spend.value[expense.account!]) {
+        spend.value[expense.account!] = expense.price
       }
       else {
-        spend.value[expense.account] += expense.price
+        spend.value[expense.account!] += expense.price
       }
     })
   }
-
-  // const { data, error } = await client
-  //   .from('expenses')
-  //   .select('*')
-  //   .eq('user_id', user.value.id)
-  //   .gte('created_at', Date())
 }
 
 async function fetchAccounts() {
