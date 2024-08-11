@@ -4,6 +4,7 @@ import type { FormSubmitEvent } from '#ui/types'
 import type { Database } from '@/types/index'
 
 const toast = useToast()
+const spent = useSpent()
 const isLoading = ref(false)
 
 const schema = v.object({
@@ -37,7 +38,7 @@ onMounted(async () => {
     .eq('user_id', user.value.id)
 
   if (error) {
-    console.log('Error fetching categories', error)
+    console.error('Error fetching categories', error)
   }
   else if (data) {
     categories.value = data.map((category: any) => category.title)
@@ -86,6 +87,7 @@ async function onSubmit(event: FormSubmitEvent<Schema>) {
       account: null,
     }
   }
+  spent.addSpent(event.data.price)
   isLoading.value = false
 }
 
@@ -104,7 +106,6 @@ async function addCategory() {
     })
   }
   else {
-    console.log('Added category', newCategory.value)
     const temp = newCategory.value
     categories.value.push(newCategory.value)
     newCategory.value = ''
@@ -112,11 +113,6 @@ async function addCategory() {
   }
   isLoading.value = false
 }
-
-const date = ref(new Date())
-watch(date, () => {
-  console.log(date.value)
-})
 </script>
 
 <template>

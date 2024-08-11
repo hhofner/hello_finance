@@ -1,17 +1,16 @@
 <script setup lang="ts">
-import type { Database } from '@/types/index'
-
 useHead({
   titleTemplate: 'Hello Budget',
 })
 
-const user = useSupabaseUser()
-const client = useSupabaseClient<Database>()
+const spent = useSpent()
+await callOnce(spent.fetch)
 
-const spentThisMonth = ref(0)
+const user = useSupabaseUser()
+
 const budget = ref(200000)
 const meterColor = computed(() => {
-  const percentage = (spentThisMonth.value / budget.value) * 100
+  const percentage = (spent.spent / budget.value) * 100
   if (percentage <= 75) {
     return 'primary'
   }
@@ -20,36 +19,6 @@ const meterColor = computed(() => {
   }
   else {
     return 'red'
-  }
-})
-
-onMounted(async () => {
-  // TODO: Fetch expenses only for the current month
-  if (!user.value)
-    return
-
-  const currentDate = new Date()
-  const firstDayOfMonth = new Date(currentDate.getFullYear(), currentDate.getMonth(), 1)
-  const firstDayOfNextMonth = new Date(currentDate.getFullYear(), currentDate.getMonth() + 1, 1)
-
-  const { data, error } = await client
-    .from('expenses')
-    .select('price')
-    .eq('user_id', user.value.id)
-    .gte('created_at', firstDayOfMonth.toISOString())
-    .lt('created_at', firstDayOfNextMonth.toISOString())
-
-  if (error) {
-    console.error('Error fetching expenses', error)
-  }
-  else if (data) {
-    spentThisMonth.value = data.reduce(
-      (acc: number, expense: any) => acc + expense.price,
-      0,
-    )
-  }
-  else {
-    spentThisMonth.value = 0
   }
 })
 
@@ -107,11 +76,14 @@ const links = [
           </ColorScheme>
         </div>
         <div>
-          <p class="text-gray-500 flex items-center gap-1">
+          <p v-if="user" class="text-gray-500 flex items-center gap-1">
             Budget: <span>¥{{ formatNumber(budget) }}</span>
           </p>
+          <p v-else>
+            Log in to start tracking your expenses!
+          </p>
         </div>
-        <UMeter size="md" icon="i-solar-money-bag-bold-duotone" indicator :label="`Spent this month: ${formatNumber(spentThisMonth)}`" :value="(spentThisMonth / budget) * 100" :color="meterColor" />
+        <UMeter size="md" icon="i-solar-money-bag-bold-duotone" indicator :label="`Spent this month: ${formatNumber(spent.spent)}`" :value="(spent.spent / budget) * 100" :color="meterColor" />
       </template>
       <NuxtPage />
     </UCard>
