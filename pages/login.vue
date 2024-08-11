@@ -26,7 +26,7 @@ async function signInWithOtp() {
   <div class="space-y-2">
     <UInput v-model="email" type="email" placeholder="Email" />
     <UButton :disabled="hasSent" @click="signInWithOtp">
-      Sign In with E-Mail
+      Sign In or Register with E-Mail
     </UButton>
     <span v-if="hasSent" class="inline-flex items-center gap-2 ml-4"><UIcon name="i-material-symbols-check" />Sent! Check your email.</span>
   </div>
