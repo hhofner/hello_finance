@@ -165,7 +165,7 @@ function payAndClose() {
   <UBadge color="blue" variant="outline" size="lg">
     Total: <span class="text-secondary-500 font-semibold">¥{{ subscriptions.reduce((acc, row) => acc + row.cost, 0) }}</span>
   </UBadge>
-  <UDivider label="Create new subscription" />
+  <UDivider label="Create new subscription" class="my-4" />
   <UForm
     :schema="v.safeParser(schema)"
     :state="state"
