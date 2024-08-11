@@ -33,6 +33,7 @@ const schema = v.object({
   startDate: v.date(),
   cost: v.number(),
 })
+const isOpen = ref(false)
 
 type Schema = v.InferOutput<typeof schema>
 
@@ -42,10 +43,6 @@ const state = ref({
   frequency: null,
   startDate: new Date(),
   cost: null,
-})
-
-watch(() => state.value.startDate, (value) => {
-  console.log('value', value)
 })
 
 const isLoading = ref(false)
@@ -106,13 +103,61 @@ async function onSubmit(event: FormSubmitEvent<Schema>) {
 
   isLoading.value = false
 }
+
+const selectedSubscription = ref<SubscriptionEntry | null>(null)
+function setSelectedSubscription(id: number) {
+  selectedSubscription.value = subscriptions.value.find(entry => entry.id === id) ?? null
+  isOpen.value = true
+}
+
+async function createEntry() {
+  if (!selectedSubscription.value) {
+    return
+  }
+  const { error } = await client.from('expenses').insert({
+    price: selectedSubscription.value.cost,
+    category: 'Subscription',
+    notes: selectedSubscription.value.name,
+    account: 'Rakuten Card',
+    user_id: user.value.id,
+    created_at: new Date().toISOString(),
+  })
+
+  const { error: updateError } = await client.from('subscriptions')
+    .update({ paid: true })
+    .eq('id', selectedSubscription.value.id)
+    .eq('user_id', user.value.id)
+
+  if (error || updateError) {
+    console.error('Error inserting data')
+    toast.add({ title: `Error adding expense: ${error}`, color: 'red' })
+  }
+  else {
+    toast.add({ title: 'Expense added', color: 'green' })
+    subscriptions.value = subscriptions.value.map((subscription) => {
+      if (subscription.id === selectedSubscription.value!.id) {
+        return {
+          ...subscription,
+          paid: true,
+        }
+      }
+      return subscription
+    })
+    selectedSubscription.value = null
+  }
+}
+
+function payAndClose() {
+  createEntry()
+  isOpen.value = false
+}
 </script>
 
 <template>
   <Header>Subscriptions</Header>
   <UTable :rows="subscriptions" :columns="columns" class="mb-6">
     <template #paid-data="{ row }">
-      <UBadge :color="row.paid ? 'green' : 'red'" variant="subtle">
+      <UBadge :color="row.paid ? 'green' : 'red'" variant="subtle" @click="setSelectedSubscription(row.id)">
         {{ row.paid ? 'Paid' : 'Not Paid' }}
       </UBadge>
     </template>
@@ -176,4 +221,31 @@ async function onSubmit(event: FormSubmitEvent<Schema>) {
       Submit
     </UButton>
   </UForm>
+  <Halfsheet :is-open="isOpen" @close="isOpen = !isOpen">
+    <template #header>
+      <div class="text-xl font-semibold">
+        Subscription Payment
+      </div>
+    </template>
+    <template #content>
+      <div>Add a new entry for this subscription?</div>
+      <div class="flex gap-2">
+        <h3 class="font-semibold">
+          {{ selectedSubscription?.name }}
+        </h3>
+        <p>for ¥{{ selectedSubscription?.cost }} on</p>
+        <p> {{ selectedSubscription?.start_date }}</p>
+      </div>
+    </template>
+    <template #footer>
+      <div class="flex flex-row-reverse gap-2">
+        <UButton color="red" @click="isOpen = !isOpen">
+          Close
+        </UButton>
+        <UButton @click="payAndClose()">
+          Pay
+        </UButton>
+      </div>
+    </template>
+  </Halfsheet>
 </template>

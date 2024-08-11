@@ -52,7 +52,7 @@ onMounted(async () => {
     .eq('user_id', user.value.id)
 
   if (accountsError) {
-    console.log('Error fetching accounts', accountsError)
+    console.error('Error fetching accounts', accountsError)
   }
   else if (accountsData) {
     accounts.value = accountsData.map((account: any) => account.name)
@@ -73,7 +73,7 @@ async function onSubmit(event: FormSubmitEvent<Schema>) {
   })
 
   if (error) {
-    console.log('Error inserting data', error)
+    console.error('Error inserting data', error)
     toast.add({ title: `Error adding expense: ${error}`, color: 'red' })
   }
   else {
@@ -90,7 +90,6 @@ async function onSubmit(event: FormSubmitEvent<Schema>) {
 }
 
 async function addCategory() {
-  console.log('Adding category', newCategory.value)
   isLoading.value = true
   const { error } = await client.from('categories').insert({
     title: newCategory.value,
@@ -98,7 +97,7 @@ async function addCategory() {
   })
 
   if (error) {
-    console.log('Error adding category', error)
+    console.error('Error adding category', error)
     toast.add({
       title: `Error adding category \"${error}\"`,
       color: 'red',
