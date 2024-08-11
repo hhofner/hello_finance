@@ -31,7 +31,8 @@ const columns = [
     label: 'Notes',
   },
 ]
-interface ExpensesEntry extends Omit<Database['public']['Tables']['expenses']['Row'], 'price'> {
+interface ExpensesEntry
+  extends Omit<Database['public']['Tables']['expenses']['Row'], 'price'> {
   price: string
 }
 
@@ -66,20 +67,24 @@ async function fetchExpenses(from: number, maxEntries: number) {
   }
 }
 
-watch(() => currentPage.value, (page) => {
-  fetchExpenses((page - 1) * maxEntriesPerPage, maxEntriesPerPage)
-})
+watch(
+  () => currentPage.value,
+  (page) => {
+    fetchExpenses((page - 1) * maxEntriesPerPage, maxEntriesPerPage)
+  },
+)
 
 onMounted(async () => {
   const pageParam = route.query.page || 0
-  fetchExpenses(pageParam ? (Number.parseInt(pageParam) * 10) : 0, maxEntriesPerPage)
+  fetchExpenses(
+    pageParam ? Number.parseInt(pageParam) * 10 : 0,
+    maxEntriesPerPage,
+  )
 })
 </script>
 
 <template>
-  <Header>
-    Entries
-  </Header>
+  <Header> Entries </Header>
   <UTable :rows="entries" :columns="columns" class="mb-6" />
   <UPagination v-model="currentPage" :total="entryCount" />
 </template>
