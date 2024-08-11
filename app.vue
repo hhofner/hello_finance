@@ -7,7 +7,6 @@ const spent = useSpent()
 await callOnce(spent.fetch)
 
 const user = useSupabaseUser()
-
 const budget = ref(200000)
 const meterColor = computed(() => {
   const percentage = (spent.spent / budget.value) * 100
@@ -15,7 +14,7 @@ const meterColor = computed(() => {
     return 'primary'
   }
   else if (percentage <= 89) {
-    return 'amber'
+    return 'orange'
   }
   else {
     return 'red'
