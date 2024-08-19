@@ -104,20 +104,22 @@ async function onSubmit(event: FormSubmitEvent<Schema>) {
   isLoading.value = false
 }
 
-const selectedSubscription = ref<SubscriptionEntry | null>(null)
+const selectedSubscription = ref<any>([])
+
+const selectedSubscriptionToAdd = ref<SubscriptionEntry | null>(null)
 function setSelectedSubscription(id: number) {
-  selectedSubscription.value = subscriptions.value.find(entry => entry.id === id) ?? null
+  selectedSubscriptionToAdd.value = subscriptions.value.find(entry => entry.id === id) ?? null
   isOpen.value = true
 }
 
 async function createEntry() {
-  if (!selectedSubscription.value) {
+  if (!selectedSubscriptionToAdd.value) {
     return
   }
   const { error } = await client.from('expenses').insert({
-    price: selectedSubscription.value.cost,
+    price: selectedSubscriptionToAdd.value.cost,
     category: 'Subscription',
-    notes: selectedSubscription.value.name,
+    notes: selectedSubscriptionToAdd.value.name,
     account: 'Rakuten Card',
     user_id: user.value.id,
     created_at: new Date().toISOString(),
@@ -125,7 +127,7 @@ async function createEntry() {
 
   const { error: updateError } = await client.from('subscriptions')
     .update({ paid: true })
-    .eq('id', selectedSubscription.value.id)
+    .eq('id', selectedSubscriptionToAdd.value.id)
     .eq('user_id', user.value.id)
 
   if (error || updateError) {
@@ -135,7 +137,7 @@ async function createEntry() {
   else {
     toast.add({ title: 'Expense added', color: 'green' })
     subscriptions.value = subscriptions.value.map((subscription) => {
-      if (subscription.id === selectedSubscription.value!.id) {
+      if (subscription.id === selectedSubscriptionToAdd.value!.id) {
         return {
           ...subscription,
           paid: true,
@@ -143,7 +145,7 @@ async function createEntry() {
       }
       return subscription
     })
-    selectedSubscription.value = null
+    selectedSubscriptionToAdd.value = null
   }
 }
 
@@ -151,11 +153,13 @@ function payAndClose() {
   createEntry()
   isOpen.value = false
 }
+
+const dividerLabel = computed(() => selectedSubscription.value.length > 0 ? 'Edit subscription' : 'Add New Subscription')
 </script>
 
 <template>
   <Header>Subscriptions</Header>
-  <UTable :rows="subscriptions" :columns="columns" class="mb-6">
+  <UTable v-model="selectedSubscription" :rows="subscriptions" :columns="columns" class="mb-6">
     <template #paid-data="{ row }">
       <UBadge :color="row.paid ? 'green' : 'red'" variant="subtle" @click="setSelectedSubscription(row.id)">
         {{ row.paid ? 'Paid' : 'Not Paid' }}
@@ -165,7 +169,7 @@ function payAndClose() {
   <UBadge color="blue" variant="outline" size="lg">
     Total: <span class="text-secondary-500 font-semibold">¥{{ subscriptions.reduce((acc, row) => acc + row.cost, 0) }}</span>
   </UBadge>
-  <UDivider label="Create new subscription" class="my-4" />
+  <UDivider :label="dividerLabel" class="my-4" />
   <UForm
     :schema="v.safeParser(schema)"
     :state="state"
@@ -231,10 +235,10 @@ function payAndClose() {
       <div>Add a new entry for this subscription?</div>
       <div class="flex gap-2">
         <h3 class="font-semibold">
-          {{ selectedSubscription?.name }}
+          {{ selectedSubscriptionToAdd?.name }}
         </h3>
-        <p>for ¥{{ selectedSubscription?.cost }} on</p>
-        <p> {{ selectedSubscription?.start_date }}</p>
+        <p>for ¥{{ selectedSubscriptionToAdd?.cost }} on</p>
+        <p>{{ selectedSubscriptionToAdd?.start_date }}</p>
       </div>
     </template>
     <template #footer>
