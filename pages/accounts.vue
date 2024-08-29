@@ -67,8 +67,8 @@ const schema = v.object({
 })
 type Schema = v.InferOutput<typeof schema>
 
-const state = ref({
-  name: null,
+const state = ref<{ name: undefined | string }>({
+  name: undefined,
 })
 
 const isLoading = ref(false)
@@ -89,7 +89,7 @@ async function onSubmit(event: FormSubmitEvent<Schema>) {
   else {
     toast.add({ title: 'Added new account', color: 'green' })
     accounts.value.push(data[0])
-    state.value = { name: null }
+    state.value = { name: undefined }
   }
   isLoading.value = false
 }

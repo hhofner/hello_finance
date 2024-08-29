@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import { isArray } from '@unovis/ts'
 import type { Database } from '@/types/index'
 
 const user = useSupabaseUser()
@@ -75,12 +76,17 @@ watch(
 )
 
 onMounted(() => {
-  const pageParam = route.query.page || 0
+  const rawPageParam = route.query.page || 0
+  let pageParam: number | undefined
+  if (rawPageParam && !isArray(rawPageParam)) {
+    pageParam = Number.parseInt(rawPageParam)
+  }
   fetchExpenses(
-    pageParam ? Number.parseInt(pageParam) * 10 : 0,
+    pageParam ? pageParam * 10 : 0,
     maxEntriesPerPage,
   )
 })
+const isOpen = ref(false)
 </script>
 
 <template>
@@ -104,7 +110,7 @@ onMounted(() => {
         <UButton color="red" @click="isOpen = !isOpen">
           Close
         </UButton>
-        <UButton @click="">
+        <UButton>
           Update
         </UButton>
       </div>

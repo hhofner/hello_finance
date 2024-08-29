@@ -39,10 +39,10 @@ type Schema = v.InferOutput<typeof schema>
 
 const frequencyOptions = ['Monthly', 'Yearly']
 const state = ref({
-  name: null,
-  frequency: null,
+  name: undefined,
+  frequency: undefined,
   startDate: new Date(),
-  cost: null,
+  cost: undefined,
 })
 
 const isLoading = ref(false)
@@ -94,10 +94,10 @@ async function onSubmit(event: FormSubmitEvent<Schema>) {
     toast.add({ title: `${state.value.name} subscription added!`, color: 'green' })
 
     state.value = {
-      name: null,
-      frequency: null,
+      name: undefined,
+      frequency: undefined,
       startDate: new Date(),
-      cost: null,
+      cost: undefined,
     }
   }
 
