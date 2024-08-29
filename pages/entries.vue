@@ -74,7 +74,7 @@ watch(
   },
 )
 
-onMounted(async () => {
+onMounted(() => {
   const pageParam = route.query.page || 0
   fetchExpenses(
     pageParam ? Number.parseInt(pageParam) * 10 : 0,
@@ -87,4 +87,27 @@ onMounted(async () => {
   <Header> Entries </Header>
   <UTable :rows="entries" :columns="columns" class="mb-6" />
   <UPagination v-model="currentPage" :total="entryCount" />
+  <Halfsheet :is-open="isOpen" @close="isOpen = !isOpen">
+    <template #header>
+      <div class="text-xl font-semibold">
+        Subscription Payment
+      </div>
+    </template>
+    <template #content>
+      <div>Edit entry</div>
+      <form>
+        <UInput name="" />
+      </form>
+    </template>
+    <template #footer>
+      <div class="flex flex-row-reverse gap-2">
+        <UButton color="red" @click="isOpen = !isOpen">
+          Close
+        </UButton>
+        <UButton @click="">
+          Update
+        </UButton>
+      </div>
+    </template>
+  </Halfsheet>
 </template>

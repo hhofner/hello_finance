@@ -39,9 +39,9 @@ const links = [
     click: closeSlideover,
   },
   {
-    label: 'Stats',
-    icon: 'i-material-symbols-query-stats',
-    to: '/stats',
+    label: 'Categories',
+    icon: 'i-material-symbols-category',
+    to: '/categories',
     click: closeSlideover,
   },
   {
@@ -54,6 +54,12 @@ const links = [
     label: 'Subscriptions',
     icon: 'i-material-symbols-settings',
     to: '/subscriptions',
+    click: closeSlideover,
+  },
+  {
+    label: 'Stats',
+    icon: 'i-material-symbols-query-stats',
+    to: '/stats',
     click: closeSlideover,
   },
 ]

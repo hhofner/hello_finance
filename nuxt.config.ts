@@ -1,7 +1,7 @@
 // https://nuxt.com/docs/api/configuration/nuxt-config
 export default defineNuxtConfig({
   devtools: { enabled: true },
-  modules: ['@nuxt/ui', '@nuxtjs/supabase', '@pinia/nuxt'],
+  modules: ['@nuxt/ui', '@nuxtjs/supabase', '@pinia/nuxt', 'nuxt-echarts'],
 
   runtimeConfig: {
     public: {
@@ -9,4 +9,8 @@ export default defineNuxtConfig({
     },
   },
   compatibilityDate: '2024-08-05',
+  echarts: {
+    charts: ['BarChart'],
+    components: ['DatasetComponent', 'GridComponent', 'TooltipComponent', 'TitleComponent', 'LegendComponent'],
+  },
 })
