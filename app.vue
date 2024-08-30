@@ -94,7 +94,7 @@ const links = [
     </UCard>
   </UContainer>
   <USlideover v-model="isOpen">
-    <div class="p-4 flex-1">
+    <div class="p-4 flex-1 flex flex-col">
       <UButton
         color="gray"
         variant="ghost"
@@ -105,6 +105,7 @@ const links = [
         padded
         @click="isOpen = false"
       />
+      <div class="flex-grow" />
 
       <!-- <Placeholder class="h-full" /> -->
       <UVerticalNavigation :links="links" class="mt-10" />
