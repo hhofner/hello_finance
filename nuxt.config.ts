@@ -13,4 +13,10 @@ export default defineNuxtConfig({
     charts: ['BarChart'],
     components: ['DatasetComponent', 'GridComponent', 'TooltipComponent', 'TitleComponent', 'LegendComponent'],
   },
+  pwa: {
+    registerType: 'prompt',
+    devOptions: {
+      enabled: true,
+    },
+  },
 })

@@ -66,6 +66,7 @@ const links = [
 </script>
 
 <template>
+  <NuxtPwaManifest />
   <UContainer class="pb-4">
     <UCard class="mt-10">
       <template #header>
