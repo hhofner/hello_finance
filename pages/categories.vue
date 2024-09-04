@@ -62,6 +62,9 @@ const columns = [
     key: 'sum',
     label: 'Total',
   },
+  {
+    key: 'actions',
+  },
 ]
 
 onMounted(() => {
@@ -92,6 +95,59 @@ onMounted(() => {
     // then we need to join the ones that have :: into one category
   })
 })
+const selectedCategory = ref<{ id: string, title: string } | null>(null)
+
+const deleteCategoryText = ref<string | null>(null)
+const modalStatus = ref<'delete' | 'edit'>('edit')
+const isOpen = ref(false)
+
+function items(row) {
+  return [
+    [{
+      label: 'Edit',
+      icon: 'i-heroicons-pencil-square-20-solid',
+      click: () => {
+        selectedCategory.value = { id: row.id, title: row.title }
+        modalStatus.value = 'edit'
+        isOpen.value = true
+      },
+    // }, {
+    //   label: 'Duplicate',
+    //   icon: 'i-heroicons-document-duplicate-20-solid',
+    },
+    ],
+    // [{
+    //   label: 'Archive',
+    //   icon: 'i-heroicons-archive-box-20-solid',
+    // }],
+    // [{
+    //   label: 'Delete',
+    //   icon: 'i-heroicons-trash-20-solid',
+    //   click: () => {
+    //     deleteCategoryText.value = row.title
+    //     modalStatus.value = 'delete'
+    //     isOpen.value = true
+    //   },
+    // }],
+  ]
+}
+
+async function editCategory(categoryId: string, newTitle: string) {
+  const { error } = await client.from('categories').update({ title: newTitle }).eq('id', categoryId)
+
+  if (error) {
+    console.error(error)
+    toast.add({
+      title: `Error editing category: ${JSON.stringify(error)}`,
+      color: 'red',
+    })
+  }
+  else {
+    toast.add({ title: `Edited category to "${newTitle}"`, color: 'blue' })
+  }
+
+  isOpen.value = false
+}
 </script>
 
 <template>
@@ -100,5 +156,44 @@ onMounted(() => {
     <template #sum-data="{ row }">
       <span class="text-right">¥ {{ formatNumber(row.sum) }}</span>
     </template>
+    <template #actions-data="{ row }">
+      <UDropdown :items="items(row)">
+        <UButton color="gray" variant="ghost" icon="i-heroicons-ellipsis-horizontal-20-solid" />
+      </UDropdown>
+    </template>
   </UTable>
+  <UModal v-model="isOpen">
+    <UCard>
+      <template #header>
+        <h2 class="font-lg font-semibold">
+          {{ modalStatus === 'edit' ? 'Edit' : 'Delete' }} Category
+        </h2>
+      </template>
+      <Placeholder class="h-32" />
+      <p v-if="modalStatus === 'delete'">
+        Delete category "{{ selectedCategory?.title }}"?
+      </p>
+      <div v-else>
+        <UFormGroup name="title">
+          <template #label>
+            <div class="flex items-center gap-1">
+              Title
+            </div>
+          </template>
+          <UInput v-model="selectedCategory!.title" type="text" />
+        </UFormGroup>
+      </div>
+      <template #footer>
+        <UButton color="gray" class="mr-4" @click="deleteCategoryText = null">
+          Cancel
+        </UButton>
+        <UButton v-if="modalStatus === 'delete'" type="submit" color="red" @click="deleteCategoryText = null">
+          Delete
+        </UButton>
+        <UButton v-else type="submit" color="green" @click="() => editCategory(selectedCategory?.id, selectedCategory.title)">
+          Save
+        </ubutton>
+      </template>
+    </UCard>
+  </UModal>
 </template>

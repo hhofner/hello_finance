@@ -121,13 +121,7 @@ async function addCategory() {
 </script>
 
 <template>
-  <UForm
-    :schema="v.safeParser(schema)"
-    :state="state"
-    class="space-y-4"
-    :validate-on="['submit']"
-    @submit="onSubmit"
-  >
+  <UForm :schema="v.safeParser(schema)" :state="state" class="space-y-4" :validate-on="['submit']" @submit="onSubmit">
     <UFormGroup name="price" size="xl">
       <template #label>
         <div class="flex items-center gap-1">
@@ -149,18 +143,9 @@ async function addCategory() {
       <USelect v-model="state.category" :options="categories" />
     </UFormGroup>
     <div class="flex gap-4">
-      <UInput
-        v-model="newCategory"
-        color="gray"
-        variant="outline"
-        size="xl"
-        placeholder="New Category"
-      />
+      <UInput v-model="newCategory" color="gray" variant="outline" size="xl" placeholder="New Category" />
       <UButton
-        :disabled="isLoading"
-        color="blue"
-        variant="soft"
-        icon="i-material-symbols-add-circle-outline"
+        :disabled="isLoading" color="blue" variant="soft" icon="i-material-symbols-add-circle-outline"
         @click="addCategory"
       >
         Add Category
