@@ -4,16 +4,16 @@ useHead({
 })
 
 const spent = useSpent()
-await callOnce(spent.fetch)
+await spent.fetch()
 
 const user = useSupabaseUser()
 const budget = ref(200000)
 const meterColor = computed(() => {
   const percentage = (spent.spent / budget.value) * 100
-  if (percentage <= 75) {
+  if (percentage <= 80) {
     return 'primary'
   }
-  else if (percentage <= 89) {
+  else if (percentage <= 95) {
     return 'orange'
   }
   else {
@@ -108,7 +108,6 @@ const links = [
       />
       <div class="flex-grow" />
 
-      <!-- <Placeholder class="h-full" /> -->
       <UVerticalNavigation :links="links" class="mt-10" />
     </div>
   </USlideover>
