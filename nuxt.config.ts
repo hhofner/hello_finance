@@ -16,7 +16,7 @@ export default defineNuxtConfig({
   pwa: {
     registerType: 'prompt',
     devOptions: {
-      enabled: true,
+      enabled: false,
     },
   },
 })
