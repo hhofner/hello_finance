@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import * as v from 'valibot'
+import { format } from 'date-fns'
 import type { FormSubmitEvent } from '#ui/types'
 import type { Database } from '@/types/index'
 
@@ -9,18 +10,20 @@ const isLoading = ref(false)
 
 const schema = v.object({
   price: v.pipe(v.number(), v.integer()),
-  category: v.pipe(v.string()),
-  notes: v.optional(v.string()),
-  account: v.pipe(v.string()),
+  category: v.string(),
+  notes: v.string(),
+  account: v.string(),
+  date: v.date(),
 })
 
 type Schema = v.InferOutput<typeof schema>
 
 const state = ref({
-  price: null,
-  category: null,
+  price: undefined,
+  category: undefined,
   notes: '',
-  account: null,
+  account: undefined,
+  date: new Date(),
 })
 
 const newCategory = ref('')
@@ -71,6 +74,7 @@ async function onSubmit(event: FormSubmitEvent<Schema>) {
     notes: event.data.notes,
     account: event.data.account,
     user_id: user.value.id,
+    created_at: event.data.date,
   })
 
   if (error) {
@@ -81,10 +85,11 @@ async function onSubmit(event: FormSubmitEvent<Schema>) {
     toast.add({ title: 'Expense added', color: 'green' })
 
     state.value = {
-      price: null,
-      category: null,
+      price: undefined,
+      category: undefined,
       notes: '',
-      account: null,
+      account: undefined,
+      date: new Date(),
     }
   }
   spent.addSpent(event.data.price)
@@ -170,12 +175,12 @@ async function addCategory() {
       </template>
       <USelect v-model="state.account" :options="accounts" />
     </UFormGroup>
-    <!-- <UPopover :popper="{ placement: 'bottom-start' }">
-      <UButton icon="i-heroicons-calendar-days-20-solid" :label="format(date, 'd MMM, yyy')" variant="soft" />
+    <UPopover :popper="{ placement: 'bottom-start' }">
+      <UButton icon="i-heroicons-calendar-days-20-solid" :label="format(state.date, 'd MMM, yyy')" variant="soft" />
       <template #panel="{ close }">
-        <DatePicker v-model="date" @close="close" />
+        <DatePicker v-model="state.date" @close="close" />
       </template>
-    </UPopover> -->
+    </UPopover>
     <UTextarea v-model="state.notes" size="xl" placeholder="Notes..." />
 
     <div class="flex items-center gap-2">
