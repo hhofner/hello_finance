@@ -1,22 +1,29 @@
 <script setup lang="ts">
 import { fetchEntriesThisMonth } from '~/utils/entries'
 
-const colors = ref([
-  '#fde68a',
-  '#d9f99d',
-  '#a5f3fc',
-  '#bfdbfe',
-  '#ddd6fe',
-  '#fbcfe8',
-])
 const entries = ref<{ price: number, created_at: string }[]>([])
+const lastMonthEntries = ref<{ price: number, created_at: string }[]>([])
 const totalExpensesByDay = computed(() => {
   return entries.value.reduce((acc, entry) => {
     const day = new Date(entry.created_at).getUTCDate()
     if (!acc[day]) {
       acc[day] = 0
     }
-    acc[day] += entry.price
+    if (entry.price !== 100500) {
+      acc[day] += entry.price
+    }
+    return acc
+  }, {} as Record<string, number>)
+})
+const totalExpensesByDayLastMonth = computed(() => {
+  return lastMonthEntries.value.reduce((acc, entry) => {
+    const day = new Date(entry.created_at).getUTCDate()
+    if (!acc[day]) {
+      acc[day] = 0
+    }
+    if (entry.price !== 100500) {
+      acc[day] += entry.price
+    }
     return acc
   }, {} as Record<string, number>)
 })
@@ -42,6 +49,10 @@ const dayTrendOption = computed(() => ({
       type: 'line',
       data: Object.values(totalExpensesByDay.value),
     },
+    {
+      type: 'line',
+      data: Object.values(totalExpensesByDayLastMonth.value),
+    },
   ],
 }))
 
@@ -55,6 +66,13 @@ onMounted(async () => {
   }
   // get width of inner container
 })
+const { error: lastMonthError, data: lastMonthData } = await fetchEntriesLastMonth()
+if (lastMonthError) {
+  console.error(lastMonthError)
+}
+else {
+  lastMonthEntries.value = lastMonthData
+}
 </script>
 
 <template>
