@@ -10,8 +10,9 @@ export default defineNuxtConfig({
   },
   compatibilityDate: '2024-08-05',
   echarts: {
-    charts: ['BarChart'],
+    charts: ['BarChart', 'LineChart'],
     components: ['DatasetComponent', 'GridComponent', 'TooltipComponent', 'TitleComponent', 'LegendComponent'],
+    ssr: false,
   },
   pwa: {
     registerType: 'prompt',
